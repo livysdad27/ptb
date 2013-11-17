@@ -5,8 +5,6 @@
 #Purpose:  Main pygame loop for police turtle bob prototype
 #Date:  11/13/13
 ##########################
-#$Id: main.py,v 1.2 2013/11/17 18:00:48 billylee Exp billylee $
-##########################
 import pygame, sys
 from pygame.locals import *
 
