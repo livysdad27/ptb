@@ -31,7 +31,7 @@ boby = 100
 
 def bobanim(imgarr, direction, bobdelay ,x, y, bobsurf):
   BOBLIMIT = 3 
-  BOBSPEED = 1 
+  BOBSPEED = 6 
   if direction == "right":
     x += BOBSPEED 
     if bobsurf != imgarr[1] and bobdelay > BOBLIMIT:
@@ -60,12 +60,12 @@ def keyPressed(key):
   
 while True:
   for event in pygame.event.get():
-    if event.type == QUIT:
+    if event.type == QUIT or keyPressed(K_ESCAPE):
       pygame.quit()
       sys.exit()
-  if keyPressed(K_d): 
+  if keyPressed(K_d) and not keyPressed(K_a): 
     bobx, boby, bobsurf, bobdelay = bobanim(imgarr, "right", bobdelay, bobx, boby, bobsurf)
-  elif keyPressed(K_a):  
+  elif keyPressed(K_a) and not keyPressed(K_d):  
     bobx, boby, bobsurf, bobdelay = bobanim(imgarr, "left", bobdelay, bobx, boby, bobsurf)
 
   DISPSURF.fill(WHITE)
