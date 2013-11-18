@@ -24,32 +24,31 @@ imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
 imgarr.append(pygame.transform.flip(imgarr[0], True, False))
 imgarr.append(pygame.transform.flip(imgarr[1], True, False))
-bobsurf = imgarr[0]
 bobdelay = 0
 bobx = 100
 boby = 100
 
-def bobanim(imgarr, direction, bobdelay ,x, y, bobsurf):
-  BOBLIMIT = 3 
-  BOBSPEED = 6 
-  if direction == "right":
-    x += BOBSPEED 
-    if bobsurf != imgarr[1] and bobdelay > BOBLIMIT:
-      bobdelay = 0
-      bobsurf = imgarr[1]
-    if bobsurf != imgarr[0] and bobdelay > BOBLIMIT:
-      bobdelay = 0
-      bobsurf = imgarr[0]
-  if direction == "left":
-    x -= BOBSPEED 
-    if bobsurf != imgarr[3] and bobdelay > BOBLIMIT:
-      bobdelay = 0
-      bobsurf = imgarr[3] 
-    if bobsurf != imgarr[2] and bobdelay > BOBLIMIT:
-      bobdelay = 0 
-      bobsurf = imgarr[2] 
-  bobdelay += 1
-  return x, y, bobsurf, bobdelay 
+#Build a player class to control ptb as we play.
+class player(object):
+  def __init__(self, imgarr, startx, starty):
+#    pygame.sprite.Sprite().__init__(self)
+    self.imgarr = imgarr
+    self.x = startx
+    self.y = starty
+  BOBSPEED = 4
+  BOBLIMIT = 3
+  bobsurf = imgarr[1]
+  bobdelay = 0
+  def update(self):
+    if keyPressed(K_RIGHT):
+      self.x += BOBSPEED
+      if bobsurf != imgarr[1] and bobdelay > BOBLIMIT:
+        self.bobdelay = 0
+        self.bobsurf = imgarr[1]
+      if bobsurf != imgarr[0] and bobdelay > BOBLIMIT:
+        self.bobdelay = 0
+        self.bobsurf = imgarr[0]
+      self.bobdelay += 1
 
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
@@ -63,13 +62,10 @@ while True:
     if event.type == QUIT or keyPressed(K_ESCAPE):
       pygame.quit()
       sys.exit()
-  if keyPressed(K_d) and not keyPressed(K_a): 
-    bobx, boby, bobsurf, bobdelay = bobanim(imgarr, "right", bobdelay, bobx, boby, bobsurf)
-  elif keyPressed(K_a) and not keyPressed(K_d):  
-    bobx, boby, bobsurf, bobdelay = bobanim(imgarr, "left", bobdelay, bobx, boby, bobsurf)
-
+  ptb = player(imgarr, 100, 100)
   DISPSURF.fill(WHITE)
-  DISPSURF.blit(bobsurf, (bobx, boby))
+  DISPSURF.blit(ptb.bobsurf, (ptb.x, ptb.y))
   pygame.display.update()
+  pygame.display.flip()
   FPSCLOCK.tick(FPS)
   
