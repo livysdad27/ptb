@@ -1,0 +1,5 @@
+1.  Remake animation as sprite/object with arbitrary size spritesheet anim.
+2.  Create jump code with right/left hand move code.
+3.  Scale speed to change based on locomotion type.
+4.  Figure out a screen/message dialogue for narration.
+5.  Start to create bad guy sprites and sprite objects.
