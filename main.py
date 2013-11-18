@@ -5,7 +5,7 @@
 #Purpose:  Main pygame loop for police turtle bob prototype
 #Date:  11/13/13
 ##########################
-import pygame, sys
+import pygame, sys, time
 from pygame.locals import *
 
 FPS = 30
@@ -22,11 +22,6 @@ pygame.display.set_caption("PTB Prototype")
 imgarr = []
 imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
-imgarr.append(pygame.transform.flip(imgarr[0], True, False))
-imgarr.append(pygame.transform.flip(imgarr[1], True, False))
-bobdelay = 0
-bobx = 100
-boby = 100
 
 #Build a player class to control ptb as we play.
 class player(pygame.sprite.Sprite):
@@ -37,14 +32,26 @@ class player(pygame.sprite.Sprite):
     self.imgarr = imgarr
     self.x = startx
     self.y = starty
+  revarr = []
+  for frame in imgarr:
+    revarr.append(pygame.transform.flip(frame, True, False))
   BOBSPEED = 4
+  t1 = time.time()
+  maxi = len(imgarr)
+  i = 0
   def update(self):
+    t2 = time.time()
+    if t2 - self.t1 > .5:
+      if (self.i + 1) == self.maxi:
+        self.i = 0
+      else:
+        self.i += 1
     if keyPressed(K_d):
       self.x += self.BOBSPEED
-      self.image = self.imgarr[1]
+      self.image = self.imgarr[self.i]
     if keyPressed(K_a):
       self.x -= self.BOBSPEED
-      self.image = self.imgarr[3]
+      self.image = self.revarr[self.i]
 
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
