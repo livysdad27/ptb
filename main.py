@@ -40,14 +40,14 @@ class player(object):
   bobsurf = imgarr[1]
   bobdelay = 0
   def update(self):
-    if keyPressed(K_RIGHT):
-      self.x += BOBSPEED
-      if bobsurf != imgarr[1] and bobdelay > BOBLIMIT:
+    if keyPressed(K_d):
+      self.x += self.BOBSPEED
+      if self.bobsurf != self.imgarr[1] and self.bobdelay > self.BOBLIMIT:
         self.bobdelay = 0
-        self.bobsurf = imgarr[1]
-      if bobsurf != imgarr[0] and bobdelay > BOBLIMIT:
+        self.bobsurf = self.imgarr[1]
+      if self.bobsurf != self.imgarr[0] and self.bobdelay > self.BOBLIMIT:
         self.bobdelay = 0
-        self.bobsurf = imgarr[0]
+        self.bobsurf = self.imgarr[0]
       self.bobdelay += 1
 
 def keyPressed(key):
@@ -56,13 +56,14 @@ def keyPressed(key):
     return True
   else:
     return False 
-  
+ 
+ptb = player(imgarr, 100, 100) 
 while True:
   for event in pygame.event.get():
     if event.type == QUIT or keyPressed(K_ESCAPE):
       pygame.quit()
       sys.exit()
-  ptb = player(imgarr, 100, 100)
+  ptb.update()
   DISPSURF.fill(WHITE)
   DISPSURF.blit(ptb.bobsurf, (ptb.x, ptb.y))
   pygame.display.update()
