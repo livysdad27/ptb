@@ -29,26 +29,22 @@ bobx = 100
 boby = 100
 
 #Build a player class to control ptb as we play.
-class player(object):
+class player(pygame.sprite.Sprite):
   def __init__(self, imgarr, startx, starty):
-#    pygame.sprite.Sprite().__init__(self)
+    pygame.sprite.Sprite().__init__()
+    self.image = imgarr[0]
+    self.rect = self.image.get_rect()
     self.imgarr = imgarr
     self.x = startx
     self.y = starty
   BOBSPEED = 4
-  BOBLIMIT = 3
-  bobsurf = imgarr[1]
-  bobdelay = 0
   def update(self):
     if keyPressed(K_d):
       self.x += self.BOBSPEED
-      if self.bobsurf != self.imgarr[1] and self.bobdelay > self.BOBLIMIT:
-        self.bobdelay = 0
-        self.bobsurf = self.imgarr[1]
-      if self.bobsurf != self.imgarr[0] and self.bobdelay > self.BOBLIMIT:
-        self.bobdelay = 0
-        self.bobsurf = self.imgarr[0]
-      self.bobdelay += 1
+      self.image = self.imgarr[1]
+    if keyPressed(K_a):
+      self.x -= self.BOBSPEED
+      self.image = self.imgarr[3]
 
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
@@ -65,7 +61,7 @@ while True:
       sys.exit()
   ptb.update()
   DISPSURF.fill(WHITE)
-  DISPSURF.blit(ptb.bobsurf, (ptb.x, ptb.y))
+  DISPSURF.blit(ptb.image, (ptb.x, ptb.y))
   pygame.display.update()
   pygame.display.flip()
   FPSCLOCK.tick(FPS)
