@@ -25,6 +25,7 @@ imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
 
 #Build a player class to control ptb as we play.
 class player(pygame.sprite.Sprite):
+
   def __init__(self, imgarr, startx, starty):
     pygame.sprite.Sprite().__init__()
     self.image = imgarr[0]
@@ -32,17 +33,30 @@ class player(pygame.sprite.Sprite):
     self.imgarr = imgarr
     self.x = startx
     self.y = starty
+
   revarr = []
   for frame in imgarr:
     revarr.append(pygame.transform.flip(frame, True, False))
-  BOBSPEED = 4
+  
+  JUMPACCEL = -40
+  FALLACCEL = 4
+  YSPEED = 0
+  XSPEED = 0 
+
+  def canjump(self):
+    if self.y > 299:
+      return True
+    else:
+      return False  
+
+  BOBSPEED = 20 
   t1 = time.time()
-  maxi = len(imgarr)
+  MAXFRAMES = len(imgarr)
   i = 0
   def update(self):
     t2 = time.time()
     if t2 - self.t1 > .5:
-      if (self.i + 1) == self.maxi:
+      if (self.i + 1) == self.MAXFRAMES:
         self.i = 0
       else:
         self.i += 1
@@ -52,12 +66,22 @@ class player(pygame.sprite.Sprite):
     if keyPressed(K_a):
       self.x -= self.BOBSPEED
       self.image = self.revarr[self.i]
-    if keyPressed(K_w):
-      self.y -= self.BOBSPEED
-      self.image = self.imgarr[self.i]
-    if keyPressed(K_s):
-      self.y += self.BOBSPEED
-      self.image = self.revarr[self.i]
+    if keyPressed(K_w) and self.canjump():
+      self.YSPEED += self.JUMPACCEL
+      self.y += self.YSPEED
+    if self.y <= 300:
+      self.YSPEED += self.FALLACCEL
+      if (self.y + self.YSPEED) > 300:
+        self.y = 300
+        self.YSPEED = 0
+      else:
+        self.y += self.YSPEED
+#    if keyPressed(K_w):
+#      self.y -= self.BOBSPEED
+#      self.image = self.imgarr[self.i]
+#    if keyPressed(K_s):
+#      self.y += self.BOBSPEED
+#      self.image = self.revarr[self.i]
 
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
@@ -66,7 +90,7 @@ def keyPressed(key):
   else:
     return False 
  
-ptb = player(imgarr, 100, 100) 
+ptb = player(imgarr, 100, 300) 
 while True:
   for event in pygame.event.get():
     if event.type == QUIT or keyPressed(K_ESCAPE):
