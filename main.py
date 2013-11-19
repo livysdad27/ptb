@@ -23,6 +23,7 @@ imgarr = []
 imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
 
+##################################################
 #Build a player class to control ptb as we play.
 class player(pygame.sprite.Sprite):
 
@@ -49,7 +50,7 @@ class player(pygame.sprite.Sprite):
     else:
       return False  
 
-  BOBSPEED = 20 
+  BOBSPEED = 5 
   t1 = time.time()
   MAXFRAMES = len(imgarr)
   i = 0
@@ -76,20 +77,18 @@ class player(pygame.sprite.Sprite):
         self.YSPEED = 0
       else:
         self.y += self.YSPEED
-#    if keyPressed(K_w):
-#      self.y -= self.BOBSPEED
-#      self.image = self.imgarr[self.i]
-#    if keyPressed(K_s):
-#      self.y += self.BOBSPEED
-#      self.image = self.revarr[self.i]
-
+################################################
+################################################
+#Simple utility function to get if a key has been pressed on the keyboard
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
   if keysPressed[key]:
     return True
   else:
     return False 
- 
+################################################
+
+#Instantiate bob and start the main game loop 
 ptb = player(imgarr, 100, 300) 
 while True:
   for event in pygame.event.get():
