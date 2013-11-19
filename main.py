@@ -52,6 +52,12 @@ class player(pygame.sprite.Sprite):
     if keyPressed(K_a):
       self.x -= self.BOBSPEED
       self.image = self.revarr[self.i]
+    if keyPressed(K_w):
+      self.y -= self.BOBSPEED
+      self.image = self.imgarr[self.i]
+    if keyPressed(K_s):
+      self.y += self.BOBSPEED
+      self.image = self.revarr[self.i]
 
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
