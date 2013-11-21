@@ -90,6 +90,7 @@ def keyPressed(key):
 
 #Instantiate bob and start the main game loop 
 ptb = player(imgarr, 100, 300) 
+ptb.JUMPACCEL = -20
 while True:
   for event in pygame.event.get():
     if event.type == QUIT or keyPressed(K_ESCAPE):
