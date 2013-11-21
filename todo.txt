@@ -1,5 +1,8 @@
 1.  Remake animation as sprite/object with arbitrary size spritesheet anim.
-2.  Create jump code with right/left hand move code.
-3.  Scale speed to change based on locomotion type.
+X.  Create jump code with right/left hand move code.
+X.  Scale speed to change based on locomotion type. - Made it an attribute of player object.
 4.  Figure out a screen/message dialogue for narration.
 5.  Start to create bad guy sprites and sprite objects.
+6.  Figure out how to do collision detection with blocks
+7.  Figure out tile mapping and level creation code.
+8.  Find/make tiles....

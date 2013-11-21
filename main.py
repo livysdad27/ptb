@@ -13,6 +13,7 @@ FPSCLOCK = pygame.time.Clock()
 DISPWIDTH = 800
 DISPHEIGHT = 400
 WHITE = (200, 200, 200)
+BLACK = (0, 0, 0)
 
 pygame.init
 
@@ -24,7 +25,19 @@ imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
 
 ##################################################
+#Build a block class to create something for bob and company
+#to stand on.
+##################################################
+class block(pygame.sprite.Sprite):
+  def __init__(self, x, y):
+    pygame.sprite.Sprite().__init__()
+    self.image = pygame.draw.rect(x, y) 
+    self.rect = self.image.get_rect()
+    self.x = x
+    self.y = y 
+##################################################
 #Build a player class to control ptb as we play.
+##################################################
 class player(pygame.sprite.Sprite):
 
   def __init__(self, imgarr, startx, starty):
