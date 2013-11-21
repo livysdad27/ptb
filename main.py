@@ -23,18 +23,22 @@ pygame.display.set_caption("PTB Prototype")
 imgarr = []
 imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
+ 
+brownblock = pygame.image.load("assets/brownblock.png") 
 
 ##################################################
 #Build a block class to create something for bob and company
 #to stand on.
 ##################################################
 class block(pygame.sprite.Sprite):
-  def __init__(self, x, y):
+  def __init__(self, img, x, y):
     pygame.sprite.Sprite().__init__()
-    self.image = pygame.draw.rect(x, y) 
+    self.image = img 
     self.rect = self.image.get_rect()
     self.x = x
     self.y = y 
+##################################################
+
 ##################################################
 #Build a player class to control ptb as we play.
 ##################################################
@@ -58,7 +62,7 @@ class player(pygame.sprite.Sprite):
   XSPEED = 0 
 
   def canjump(self):
-    if self.y > 299:
+    if self.y > 267:
       return True
     else:
       return False  
@@ -83,10 +87,10 @@ class player(pygame.sprite.Sprite):
     if keyPressed(K_w) and self.canjump():
       self.YSPEED += self.JUMPACCEL
       self.y += self.YSPEED
-    if self.y <= 300:
+    if self.y <= 268:
       self.YSPEED += self.FALLACCEL
-      if (self.y + self.YSPEED) > 300:
-        self.y = 300
+      if (self.y + self.YSPEED) > 268:
+        self.y = 268 
         self.YSPEED = 0
       else:
         self.y += self.YSPEED
@@ -102,8 +106,14 @@ def keyPressed(key):
 ################################################
 
 #Instantiate bob and start the main game loop 
-ptb = player(imgarr, 100, 300) 
+ptb = player(imgarr, 100, 268) 
 ptb.JUMPACCEL = -20
+
+#Instantiate some blocks durnit!
+levelmap = []
+for i in range(0, 800, 32):
+  levelmap.append(block(brownblock, i, 300))
+
 while True:
   for event in pygame.event.get():
     if event.type == QUIT or keyPressed(K_ESCAPE):
@@ -111,6 +121,8 @@ while True:
       sys.exit()
   ptb.update()
   DISPSURF.fill(WHITE)
+  for blck in levelmap:
+    DISPSURF.blit(blck.image, (blck.x, blck.y))
   DISPSURF.blit(ptb.image, (ptb.x, ptb.y))
   pygame.display.update()
   pygame.display.flip()
