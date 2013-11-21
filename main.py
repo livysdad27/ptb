@@ -60,40 +60,56 @@ class player(pygame.sprite.Sprite):
   FALLACCEL = 4
   YSPEED = 0
   XSPEED = 0 
-
-  def canjump(self):
-    if self.rect.y > 267:
-      return True
+ 
+  def testJump(self):
+    if pygame.sprite.spritecollide(self, level, False):
+      self.CANJUMP = True
     else:
-      return False  
-
+      self.CANJUMP = False
+ 
+  CANJUMP = False 
+ 
   BOBSPEED = 5 
   t1 = time.time()
   MAXFRAMES = len(imgarr)
   i = 0
   def update(self):
+    #Compare time and animate the sprite array
     t2 = time.time()
     if t2 - self.t1 > .5:
       if (self.i + 1) == self.MAXFRAMES:
         self.i = 0
       else:
         self.i += 1
+    
+    #Move right
     if keyPressed(K_d):
       self.rect.x += self.BOBSPEED
       self.image = self.imgarr[self.i]
+      self.testJump()
+ 
+    #Move left
     if keyPressed(K_a):
       self.rect.x -= self.BOBSPEED
       self.image = self.revarr[self.i]
-    if keyPressed(K_w) and self.canjump():
+      self.testJump()
+
+    #Jump
+    if keyPressed(K_w) and self.CANJUMP:
       self.YSPEED += self.JUMPACCEL
       self.rect.y += self.YSPEED
-    if self.rect.y <= 268:
+      self.CANJUMP = False
+ 
+    #Fall
+    if self.CANJUMP == False:
       self.YSPEED += self.FALLACCEL
-      if (self.rect.y + self.YSPEED) > 268:
-        self.rect.y = 268 
+      blocksCollided =  pygame.sprite.spritecollide(self, level, False)
+      for block in blocksCollided:
+        self.rect.bottom = block.rect.top + 1
         self.YSPEED = 0
+        self.CANJUMP = True
       else:
-        self.rect.y += self.YSPEED
+        self.rect.y += self.YSPEED  
 ################################################
 
 ################################################
@@ -110,8 +126,8 @@ def keyPressed(key):
 allsprites = pygame.sprite.Group()
 
 #Instantiate bob and start the main game loop 
-ptb = player(imgarr, 100, 268) 
-ptb.JUMPACCEL = -50
+ptb = player(imgarr, 100, 200) 
+ptb.JUMPACCEL = -35
 allsprites.add(ptb)
 
 #Instantiate some blocks durnit!
@@ -119,6 +135,7 @@ level = pygame.sprite.Group()
 levelmap = [] 
 for i in range(0, 800, 32):
   levelmap.append(block(brownblock, i, 300))
+  if i > 400:  levelmap.append(block(brownblock, i, 250))
 
 level.add(levelmap)  
 allsprites.add(levelmap)
@@ -129,6 +146,7 @@ while True:
       pygame.quit()
       sys.exit()
   ptb.update()
+  print ptb.CANJUMP
   DISPSURF.fill(WHITE)
   allsprites.draw(DISPSURF)
   pygame.display.update()
