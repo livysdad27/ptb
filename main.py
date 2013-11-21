@@ -95,8 +95,10 @@ class player(pygame.sprite.Sprite):
       else:
         self.rect.y += self.YSPEED
 ################################################
+
 ################################################
 #Simple utility function to get if a key has been pressed on the keyboard
+################################################
 def keyPressed(key):
   keysPressed = pygame.key.get_pressed()
   if keysPressed[key]:
@@ -104,10 +106,13 @@ def keyPressed(key):
   else:
     return False 
 ################################################
+#Create an all sprites list
+allsprites = pygame.sprite.Group()
 
 #Instantiate bob and start the main game loop 
 ptb = player(imgarr, 100, 268) 
 ptb.JUMPACCEL = -50
+allsprites.add(ptb)
 
 #Instantiate some blocks durnit!
 level = pygame.sprite.Group()
@@ -116,7 +121,7 @@ for i in range(0, 800, 32):
   levelmap.append(block(brownblock, i, 300))
 
 level.add(levelmap)  
-print level
+allsprites.add(levelmap)
 
 while True:
   for event in pygame.event.get():
@@ -125,8 +130,7 @@ while True:
       sys.exit()
   ptb.update()
   DISPSURF.fill(WHITE)
-  level.draw(DISPSURF)
-  DISPSURF.blit(ptb.image, (ptb.rect.x, ptb.rect.y))
+  allsprites.draw(DISPSURF)
   pygame.display.update()
   pygame.display.flip()
   FPSCLOCK.tick(FPS)
