@@ -134,4 +134,3 @@ while True:
   pygame.display.update()
   pygame.display.flip()
   FPSCLOCK.tick(FPS)
-  
