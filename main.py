@@ -69,10 +69,11 @@ class player(pygame.sprite.Sprite):
  
   CANJUMP = False 
  
-  BOBSPEED = 5 
+  MAXSPEED = 5 
   t1 = time.time()
   MAXFRAMES = len(imgarr)
   i = 0
+
   def update(self):
     #Compare time and animate the sprite array
     t2 = time.time()
@@ -81,18 +82,21 @@ class player(pygame.sprite.Sprite):
         self.i = 0
       else:
         self.i += 1
-    
-    #Move right
-    if keyPressed(K_d):
-      self.rect.x += self.BOBSPEED
-      self.image = self.imgarr[self.i]
-      self.testJump()
  
-    #Move left
+    #Test for falling
+    print pygame.sprite.spritecollide(self, level, False)
+    if not pygame.sprite.spritecollide(self, level, False): 
+      self.CANJUMP = False
+
+    #Accel right
+    if keyPressed(K_d):
+      self.image = self.imgarr[self.i]
+      self.rect.x += self.MAXSPEED
+ 
+    #Accel left
     if keyPressed(K_a):
-      self.rect.x -= self.BOBSPEED
-      self.image = self.revarr[self.i]
-      self.testJump()
+      self.image = self.revarr[self.i] 
+      self.rect.x -= self.MAXSPEED
 
     #Jump
     if keyPressed(K_w) and self.CANJUMP:
@@ -146,7 +150,6 @@ while True:
       pygame.quit()
       sys.exit()
   ptb.update()
-  print ptb.CANJUMP
   DISPSURF.fill(WHITE)
   allsprites.draw(DISPSURF)
   pygame.display.update()
