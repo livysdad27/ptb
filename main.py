@@ -32,11 +32,11 @@ brownblock = pygame.image.load("assets/brownblock.png")
 ##################################################
 class block(pygame.sprite.Sprite):
   def __init__(self, img, x, y):
-    pygame.sprite.Sprite().__init__()
+    pygame.sprite.Sprite.__init__(self)
     self.image = img 
     self.rect = self.image.get_rect()
-    self.x = x
-    self.y = y 
+    self.rect.x = x
+    self.rect.y = y
 ##################################################
 
 ##################################################
@@ -45,12 +45,12 @@ class block(pygame.sprite.Sprite):
 class player(pygame.sprite.Sprite):
 
   def __init__(self, imgarr, startx, starty):
-    pygame.sprite.Sprite().__init__()
+    pygame.sprite.Sprite.__init__(self)
     self.image = imgarr[0]
     self.rect = self.image.get_rect()
     self.imgarr = imgarr
-    self.x = startx
-    self.y = starty
+    self.rect.x = startx
+    self.rect.y = starty
 
   revarr = []
   for frame in imgarr:
@@ -62,7 +62,7 @@ class player(pygame.sprite.Sprite):
   XSPEED = 0 
 
   def canjump(self):
-    if self.y > 267:
+    if self.rect.y > 267:
       return True
     else:
       return False  
@@ -79,21 +79,21 @@ class player(pygame.sprite.Sprite):
       else:
         self.i += 1
     if keyPressed(K_d):
-      self.x += self.BOBSPEED
+      self.rect.x += self.BOBSPEED
       self.image = self.imgarr[self.i]
     if keyPressed(K_a):
-      self.x -= self.BOBSPEED
+      self.rect.x -= self.BOBSPEED
       self.image = self.revarr[self.i]
     if keyPressed(K_w) and self.canjump():
       self.YSPEED += self.JUMPACCEL
-      self.y += self.YSPEED
-    if self.y <= 268:
+      self.rect.y += self.YSPEED
+    if self.rect.y <= 268:
       self.YSPEED += self.FALLACCEL
-      if (self.y + self.YSPEED) > 268:
-        self.y = 268 
+      if (self.rect.y + self.YSPEED) > 268:
+        self.rect.y = 268 
         self.YSPEED = 0
       else:
-        self.y += self.YSPEED
+        self.rect.y += self.YSPEED
 ################################################
 ################################################
 #Simple utility function to get if a key has been pressed on the keyboard
@@ -107,12 +107,16 @@ def keyPressed(key):
 
 #Instantiate bob and start the main game loop 
 ptb = player(imgarr, 100, 268) 
-ptb.JUMPACCEL = -20
+ptb.JUMPACCEL = -50
 
 #Instantiate some blocks durnit!
-levelmap = []
+level = pygame.sprite.Group()
+levelmap = [] 
 for i in range(0, 800, 32):
   levelmap.append(block(brownblock, i, 300))
+
+level.add(levelmap)  
+print level
 
 while True:
   for event in pygame.event.get():
@@ -121,9 +125,8 @@ while True:
       sys.exit()
   ptb.update()
   DISPSURF.fill(WHITE)
-  for blck in levelmap:
-    DISPSURF.blit(blck.image, (blck.x, blck.y))
-  DISPSURF.blit(ptb.image, (ptb.x, ptb.y))
+  level.draw(DISPSURF)
+  DISPSURF.blit(ptb.image, (ptb.rect.x, ptb.rect.y))
   pygame.display.update()
   pygame.display.flip()
   FPSCLOCK.tick(FPS)
