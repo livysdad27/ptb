@@ -30,7 +30,7 @@ brownblock = pygame.image.load("assets/brownblock.png")
 #Build a block class to create something for bob and company
 #to stand on.
 ##################################################
-class block(pygame.sprite.Sprite):
+class platform(pygame.sprite.Sprite):
   def __init__(self, img, x, y):
     pygame.sprite.Sprite.__init__(self)
     self.image = img 
@@ -67,7 +67,7 @@ class player(pygame.sprite.Sprite):
     else:
       self.CANJUMP = False
  
-  CANJUMP = False 
+  CANJUMP = True 
  
   MAXSPEED = 5 
   t1 = time.time()
@@ -138,8 +138,11 @@ allsprites.add(ptb)
 level = pygame.sprite.Group()
 levelmap = [] 
 for i in range(0, 800, 32):
-  levelmap.append(block(brownblock, i, 300))
-  if i > 400:  levelmap.append(block(brownblock, i, 250))
+  levelmap.append(platform(brownblock, i, 300))
+  if i > 400:  levelmap.append(platform(brownblock, i, 250))
+
+for i in range(0, 400, 32):
+  levelmap.append(platform(brownblock, 600, i))
 
 level.add(levelmap)  
 allsprites.add(levelmap)
