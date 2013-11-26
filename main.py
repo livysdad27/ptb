@@ -59,10 +59,11 @@ class player(pygame.sprite.Sprite):
   
   JUMPACCEL = -30
   FALLACCEL = 2 
-  XACCEL = 1
+  XACCEL = 2 
   YSPEED = 0
   XSPEED = 0 
- 
+  MAXSPEED = 10 
+
 #  def getCollide(self):
 #    blocklist = pygame.sprite.spritecollide(self, level, False)
 #    for block in blocklist:
@@ -72,35 +73,36 @@ class player(pygame.sprite.Sprite):
 #      if self.rect.right >= block.rect.left:  print "hit my right side!!!"
 #      if self.rect.left <= block.rect.right:  print "hit my left side!!!"
         
-  MAXSPEED = 5 
   t1 = time.time()
   MAXFRAMES = len(imgarr)
   FRAMEFLIP = .1
-  i = 0
+  FRAME = 0
+
   CANJUMP = False
 
   def update(self):
-    #self.getCollide()
     #Compare time and animate the sprite array
     t2 = time.time()
     if t2 - self.t1 > self.FRAMEFLIP:
       self.t1 = time.time()
-      if (self.i + 1) == self.MAXFRAMES:
-        self.i = 0
+      if (self.FRAME + 1) == self.MAXFRAMES:
+        self.FRAME = 0
       else:
-        self.i += 1
+        self.FRAME += 1
  
-    #Test for falling
+    #Test for jumping 
     if pygame.sprite.spritecollide(self, level, False): 
+      print "Collided!"
       for block in pygame.sprite.spritecollide(self, level, False):
-        if block.rect.top != self.rect.bottom:
+        print str(block.rect.top) + " " + str(self.rect.bottom)
+        if block.rect.top > self.rect.bottom:
           self.CANJUMP = False
         else:
           self.CANJUMP = True
 
     #Accel right
     if keyPressed(K_d):
-      self.image = self.imgarr[self.i]
+      self.image = self.imgarr[self.FRAME]
       if abs(self.XSPEED + self.XACCEL) > self.MAXSPEED:
         self.XSPEED = self.MAXSPEED
       else:
@@ -109,12 +111,17 @@ class player(pygame.sprite.Sprite):
  
     #Accel left
     if keyPressed(K_a):
-      self.image = self.revarr[self.i] 
+      self.image = self.revarr[self.FRAME] 
       if abs(self.XSPEED - self.XACCEL) > self.MAXSPEED:
         self.XSPEED = -self.MAXSPEED
       else:
         self.XSPEED -= self.XACCEL
       self.rect.x += self.XSPEED
+
+    #Stop the darn turtle if no keys are pressed.  We could change this to 
+    # decel if we wanted too.
+    if not (keyPressed(K_a) or keyPressed(K_d)):  
+      self.XSPEED = 0
 
     #Jump
     if keyPressed(K_w) and self.CANJUMP:
@@ -125,13 +132,7 @@ class player(pygame.sprite.Sprite):
     #Fall
     if self.CANJUMP == False:
       self.YSPEED += self.FALLACCEL
-      blocksCollided =  pygame.sprite.spritecollide(self, level, False)
-      for block in blocksCollided:
-        self.rect.bottom = block.rect.top
-        self.YSPEED = 0
-        self.CANJUMP = True
-      else:
-        self.rect.y += self.YSPEED  
+      self.rect.y += self.YSPEED  
 ################################################
 
 ################################################
