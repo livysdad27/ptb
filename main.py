@@ -56,8 +56,8 @@ class player(pygame.sprite.Sprite):
   for frame in imgarr:
     revarr.append(pygame.transform.flip(frame, True, False))
   
-  JUMPACCEL = -40
-  FALLACCEL = 4
+  JUMPACCEL = -30
+  FALLACCEL = 2 
   YSPEED = 0
   XSPEED = 0 
  
@@ -69,7 +69,7 @@ class player(pygame.sprite.Sprite):
  
   CANJUMP = True 
  
-  MAXSPEED = 5 
+  MAXSPEED = 2 
   t1 = time.time()
   MAXFRAMES = len(imgarr)
   i = 0
@@ -77,7 +77,9 @@ class player(pygame.sprite.Sprite):
   def update(self):
     #Compare time and animate the sprite array
     t2 = time.time()
-    if t2 - self.t1 > .5:
+    print t2 - self.t1
+    if t2 - self.t1 > .1:
+      self.t1 = time.time()
       if (self.i + 1) == self.MAXFRAMES:
         self.i = 0
       else:
@@ -131,7 +133,6 @@ allsprites = pygame.sprite.Group()
 
 #Instantiate bob and start the main game loop 
 ptb = player(imgarr, 100, 200) 
-ptb.JUMPACCEL = -35
 allsprites.add(ptb)
 
 #Instantiate some blocks durnit!
