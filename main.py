@@ -20,11 +20,15 @@ pygame.init
 DISPSURF = pygame.display.set_mode((DISPWIDTH, DISPHEIGHT))
 pygame.display.set_caption("PTB Prototype")
 
+#################
+#Load some sprite images
+#################
 imgarr = []
 imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
- 
+
 brownblock = pygame.image.load("assets/brownblock.png") 
+#################
 
 ##################################################
 #Build a block class to create something for bob and company
@@ -48,20 +52,20 @@ class player(pygame.sprite.Sprite):
     pygame.sprite.Sprite.__init__(self)
     self.image = imgarr[0]
     self.rect = self.image.get_rect()
-    self.futureRect = self.rect
     self.imgarr = imgarr
     self.rect.x = startx
     self.rect.y = starty
+    self.future_rect = self.rect
 
   revarr = []
   for frame in imgarr:
     revarr.append(pygame.transform.flip(frame, True, False))
   
-  JUMPACCEL = -30
+  JUMPACCEL = -15
   FALLACCEL = 2 
   XACCEL = 2 
-  YSPEED = 0
-  XSPEED = 0 
+  dy = 0
+  dx = 0 
   MAXSPEED = 10 
 
 #  def getCollide(self):
@@ -78,10 +82,18 @@ class player(pygame.sprite.Sprite):
   FRAMEFLIP = .1
   FRAME = 0
 
-  CANJUMP = False
+  def is_standing(self):
+    if pygame.sprite.spritecollide(self, level, False):
+      for block in pygame.sprite.spritecollide(self, level, False):
+        if block.rect.top <= self.rect.bottom:
+          self.rect.bottom = block.rect.top + 1
+          self.dy = 0
+          return True
+    else:
+      return False
 
   def update(self):
-    #Compare time and animate the sprite array
+    #Compare time and increment the sprite array
     t2 = time.time()
     if t2 - self.t1 > self.FRAMEFLIP:
       self.t1 = time.time()
@@ -89,50 +101,43 @@ class player(pygame.sprite.Sprite):
         self.FRAME = 0
       else:
         self.FRAME += 1
- 
-    #Test for jumping 
-    if pygame.sprite.spritecollide(self, level, False): 
-      print "Collided!"
-      for block in pygame.sprite.spritecollide(self, level, False):
-        print str(block.rect.top) + " " + str(self.rect.bottom)
-        if block.rect.top > self.rect.bottom:
-          self.CANJUMP = False
-        else:
-          self.CANJUMP = True
 
+    #See if we're standing
+    STANDING = self.is_standing()
+ 
     #Accel right
     if keyPressed(K_d):
       self.image = self.imgarr[self.FRAME]
-      if abs(self.XSPEED + self.XACCEL) > self.MAXSPEED:
-        self.XSPEED = self.MAXSPEED
+      if abs(self.dx + self.XACCEL) > self.MAXSPEED:
+        self.dx = self.MAXSPEED
       else:
-        self.XSPEED += self.XACCEL
-      self.rect.x += self.XSPEED
+        self.dx += self.XACCEL
+      self.rect.x += self.dx
  
     #Accel left
     if keyPressed(K_a):
       self.image = self.revarr[self.FRAME] 
-      if abs(self.XSPEED - self.XACCEL) > self.MAXSPEED:
-        self.XSPEED = -self.MAXSPEED
+      if abs(self.dx - self.XACCEL) > self.MAXSPEED:
+        self.dx = -self.MAXSPEED
       else:
-        self.XSPEED -= self.XACCEL
-      self.rect.x += self.XSPEED
+        self.dx -= self.XACCEL
+      self.rect.x += self.dx
 
     #Stop the darn turtle if no keys are pressed.  We could change this to 
     # decel if we wanted too.
     if not (keyPressed(K_a) or keyPressed(K_d)):  
-      self.XSPEED = 0
+      self.dx = 0
 
     #Jump
-    if keyPressed(K_w) and self.CANJUMP:
-      self.YSPEED += self.JUMPACCEL
-      self.rect.y += self.YSPEED
-      self.CANJUMP = False
+    if keyPressed(K_w) and STANDING:
+      self.dy += self.JUMPACCEL
+      self.rect.y += self.dy
  
     #Fall
-    if self.CANJUMP == False:
-      self.YSPEED += self.FALLACCEL
-      self.rect.y += self.YSPEED  
+    if not STANDING:
+      self.dy += self.FALLACCEL
+      self.rect.y += self.dy
+    print self.dy
 ################################################
 
 ################################################
@@ -155,8 +160,10 @@ allsprites.add(ptb)
 #Instantiate some blocks durnit!
 level = pygame.sprite.Group()
 levelmap = [] 
+levelrect = []
 for i in range(0, 800, 32):
   levelmap.append(platform(brownblock, i, 300))
+  levelrect.append(platform(brownblock, i, 300).rect)
   if i > 400:  levelmap.append(platform(brownblock, i, 250))
 
 for i in range(0, 400, 32):
