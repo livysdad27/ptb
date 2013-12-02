@@ -105,8 +105,7 @@ class player(pygame.sprite.Sprite):
     #See if we're standing
     STANDING = self.is_standing()
  
-    #Accel right
-    if keyPressed(K_d):
+    if keyPressed(K_d) and (not keyPressed(K_a)):
       self.image = self.imgarr[self.FRAME]
       if abs(self.dx + self.XACCEL) > self.MAXSPEED:
         self.dx = self.MAXSPEED
@@ -115,7 +114,7 @@ class player(pygame.sprite.Sprite):
       self.rect.x += self.dx
  
     #Accel left
-    if keyPressed(K_a):
+    if keyPressed(K_a) and (not keyPressed(K_d)):
       self.image = self.revarr[self.FRAME] 
       if abs(self.dx - self.XACCEL) > self.MAXSPEED:
         self.dx = -self.MAXSPEED
