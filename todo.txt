@@ -6,3 +6,10 @@ X.  Scale speed to change based on locomotion type. - Made it an attribute of pl
 6.  Figure out how to do collision detection with blocks
 7.  Figure out tile mapping and level creation code.
 8.  Find/make tiles....
+
+Algorithm for physics in PTB.
+1.  Develop the future rect.
+2.  Calculate gravity, the y axis future rect and project the future rect to see if something is below.
+3.  Calculate the x axis future rect
+4.  When the future rect collides then set the actual rect to the right edge.
+5.  If the future rect doesn't collide then just move the actual rect.  
