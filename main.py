@@ -30,7 +30,7 @@ imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
 brownblock = pygame.image.load("assets/brownblock.png") 
 #################
 
-##################################################
+#################################################
 #Build a block class to create something for bob and company
 #to stand on.
 ##################################################
@@ -41,6 +41,10 @@ class platform(pygame.sprite.Sprite):
     self.rect = self.image.get_rect()
     self.rect.x = x
     self.rect.y = y
+    self.top_rect = pygame.Rect(self.rect.left, self.rect.top, self.rect.width, 1)
+    self.bottom_rect = pygame.Rect(self.rect.left, self.rect.bottom, self.rect.width, 1)
+    self.left_rect = pygame.Rect(self.rect.left, self.rect.top, 1, self.rect.height)
+    self.right_rect = pygame.Rect(self.rect.right, self.rect.top, 1, self.rect.height)
 ##################################################
 
 ##################################################
@@ -66,30 +70,47 @@ class player(pygame.sprite.Sprite):
   XACCEL = 2 
   dy = 0
   dx = 0 
-  MAXSPEED = 10 
+  MAXSPEED = 14 
   STANDING = False 
 
   t1 = time.time()
   MAXFRAMES = len(imgarr)
   FRAMEFLIP = .1
   FRAME = 0
+  collision_array = []
 
+  #Method to test if we collide with a platform
   def platform_collide(self):
     result = self.future_rect.collidelist(levelrect)
-    if self.dx > 0 and result > -1:
-      self.rect.right = levelrect[result].left - 1
-      self.dx = 0
-    elif self.dx < 0 and result > -1:
-      self.rect.left= levelrect[result].right + 1
-      self.dx = 0
-    if self.dy > 0 and self.STANDING == False:
-      self.rect.bottom = levelrect[result].bottom - 1
-      self.STANDING = True
-      self.dy = 0
+    collision_array = [0, 0, 0, 0] 
+    ##############
+    #Determine which parts of a platform block we've hit
+    ##############
+    if self.future_rect.colliderect(levelmap[result].left_rect):
+      collision_array[0] = 1
+    if self.future_rect.colliderect(levelmap[result].right_rect):
+      collision_array[1] = 1
+    if self.future_rect.colliderect(levelmap[result].top_rect):
+      collision_array[2] = 1
+    if self.future_rect.colliderect(levelmap[result].bottom_rect):
+      collision_array[3] = 1
+    return collision_array, levelmap[result]
+
+  def is_standing(self):
+   self.future_rect.y += self.dy + self.FALLACCEL
+   self.collision_array, block = self.platform_collide()
+   self.future_rect.y = self.rect.y
+   if self.collision_array[2] == 1:
+     self.rect.bottom = block.rect.top -1
+     self.dy = 0
+     return True
+   else:
+     return False
 
   def update(self):
     #Reset the future rect.
     self.future_rect = self.rect.copy()
+    self.STANDING = self.is_standing() 
 
     #Compare time and increment the sprite array for animation
     t2 = time.time()
@@ -107,7 +128,10 @@ class player(pygame.sprite.Sprite):
       else:
         self.dx += self.XACCEL
       self.future_rect.x += self.dx
-      self.platform_collide()
+      self.collision_array, block_hit = self.platform_collide()
+      if self.collision_array[1] == 1:
+        self.rect.right = block_hit.rect.left - 1
+        self.dx = 0
       self.rect.x += self.dx
  
     #Accel left
@@ -118,8 +142,12 @@ class player(pygame.sprite.Sprite):
       else:
         self.dx -= self.XACCEL
       self.future_rect.x += self.dx
-      self.platform_collide()
-      self.rect.x += self.dx
+      self.collision_array, block_hit = self.platform_collide()
+      if self.collision_array[0] == 1:
+        self.rect.left = block_hit.rect.right + 1
+        self.dx = 0
+      else: 
+        self.rect.x += self.dx
 
     #Stop the darn turtle if no keys are pressed.  We could change this to 
     # decel if we wanted too.
@@ -130,15 +158,14 @@ class player(pygame.sprite.Sprite):
     if keyPressed(K_w) and self.STANDING:
       self.dy += self.JUMPACCEL
       self.future_rect.y += self.dy
-      self.platform_collide()
       self.rect.y += self.dy
  
     #Fall
-    #if not self.STANDING:
-    #  self.dy += self.FALLACCEL
-    #  self.future_rect.y += self.dy
-    #  self.platform_collide()
-    #  self.rect.y += self.dy
+    if not self.STANDING:
+      self.dy += self.FALLACCEL
+      self.future_rect.y += self.dy
+      self.rect.y += self.dy
+
 ################################################
 
 ################################################
