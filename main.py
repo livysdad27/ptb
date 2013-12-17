@@ -119,6 +119,9 @@ class player(pygame.sprite.Sprite):
         self.FRAME = 0
       else:
         self.FRAME += 1
+    
+    if keyPressed(K_d) and keyPressed(K_a):
+      dx = 0
 
     if keyPressed(K_d) and (not keyPressed(K_a)):
       self.image = self.imgarr[self.FRAME]
@@ -154,9 +157,6 @@ class player(pygame.sprite.Sprite):
     if not (keyPressed(K_a) or keyPressed(K_d)):  
       self.dx = 0
     
-    if keyPressed(K_a) and keyPressed(K_d):
-      self.dx = 0
-
     #Jump
     if keyPressed(K_w) and self.STANDING:
       self.dy += self.JUMPACCEL
