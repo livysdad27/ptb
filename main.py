@@ -129,10 +129,11 @@ class player(pygame.sprite.Sprite):
         self.dx += self.XACCEL
       self.future_rect.x += self.dx
       self.collision_array, block_hit = self.platform_collide()
-      if self.collision_array[1] == 1:
+      if self.collision_array[0] == 1:
         self.rect.right = block_hit.rect.left - 1
         self.dx = 0
-      self.rect.x += self.dx
+      else:
+        self.rect.x += self.dx
  
     #Accel left
     if keyPressed(K_a) and (not keyPressed(K_d)):
@@ -143,7 +144,7 @@ class player(pygame.sprite.Sprite):
         self.dx -= self.XACCEL
       self.future_rect.x += self.dx
       self.collision_array, block_hit = self.platform_collide()
-      if self.collision_array[0] == 1:
+      if self.collision_array[1] == 1:
         self.rect.left = block_hit.rect.right + 1
         self.dx = 0
       else: 
@@ -158,12 +159,22 @@ class player(pygame.sprite.Sprite):
     if keyPressed(K_w) and self.STANDING:
       self.dy += self.JUMPACCEL
       self.future_rect.y += self.dy
-      self.rect.y += self.dy
+      self.collision_array, block_hit = self.platform_collide()
+      if self.collision_array[3] == 1:
+        self.rect.top = block_hit.rect.bottom +1
+        self.dy = 0
+      else:
+        self.rect.y += self.dy
  
     #Fall
     if not self.STANDING:
       self.dy += self.FALLACCEL
-      self.future_rect.y += self.dy
+      if self.dy < 0:
+        self.future_rect.y += self.dy
+        self.collision_array, block_hit = self.platform_collide()
+        if self.collision_array[3] == 1:
+          self.rect.top = block_hit.rect.bottom + 1
+          self.dy = 0
       self.rect.y += self.dy
 
 ################################################
@@ -193,8 +204,8 @@ for i in range(0, 800, 32):
   levelmap.append(platform(brownblock, i, 300))
   levelrect.append(platform(brownblock, i, 300).rect)
   if i > 400:  
-    levelmap.append(platform(brownblock, i, 250))
-    levelrect.append(platform(brownblock, i, 250).rect)
+    levelmap.append(platform(brownblock, i, 200))
+    levelrect.append(platform(brownblock, i, 200).rect)
 
 for i in range(0, 400, 32):
   levelmap.append(platform(brownblock, 600, i))
