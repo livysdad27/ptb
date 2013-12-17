@@ -13,3 +13,10 @@ Algorithm for physics in PTB.
 3.  Calculate the x axis future rect
 4.  When the future rect collides then set the actual rect to the right edge.
 5.  If the future rect doesn't collide then just move the actual rect.  
+
+Now we need to figure out how to test for standing.  Standing = colliding
+with the top surface of a block.  Basically I need to know what I'm hitting
+unless I want to scan every block and every surface on the axis every time.
+Options:
+1.  Create a top, right, left and bottom rect for each block?
+2.  Use this as the opportunity to switch to masks???
