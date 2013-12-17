@@ -65,12 +65,12 @@ class player(pygame.sprite.Sprite):
   for frame in imgarr:
     revarr.append(pygame.transform.flip(frame, True, False))
   
-  JUMPACCEL = -15
+  JUMPACCEL = -23
   FALLACCEL = 2 
   XACCEL = 2 
   dy = 0
   dx = 0 
-  MAXSPEED = 14 
+  MAXSPEED = 3 
   STANDING = False 
 
   t1 = time.time()
@@ -107,7 +107,7 @@ class player(pygame.sprite.Sprite):
      return False
 
   def update(self):
-    #Reset the future rect.
+    #Reset the future rect determine standing status
     self.future_rect = self.rect.copy()
     self.STANDING = self.is_standing() 
 
@@ -201,19 +201,16 @@ allsprites.add(ptb)
 #Instantiate some blocks durnit!
 level = pygame.sprite.Group()
 levelmap = [] 
-levelrect = []
 for i in range(0, 800, 32):
   levelmap.append(platform(brownblock, i, 300))
-  levelrect.append(platform(brownblock, i, 300).rect)
   if i > 400:  
     levelmap.append(platform(brownblock, i, 200))
-    levelrect.append(platform(brownblock, i, 200).rect)
 
 for i in range(0, 400, 32):
   levelmap.append(platform(brownblock, 600, i))
   levelmap.append(platform(brownblock, 300, i))
-  levelrect.append(platform(brownblock, 600, i).rect)
-  levelrect.append(platform(brownblock, 300, i).rect)
+
+levelrect = [p.rect for p in levelmap]
 
 level.add(levelmap)  
 allsprites.add(levelmap)
