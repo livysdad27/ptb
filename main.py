@@ -77,7 +77,6 @@ class player(pygame.sprite.Sprite):
   MAXFRAMES = len(imgarr)
   FRAMEFLIP = .1
   FRAME = 0
-  collision_array = []
 
   #Method to test if we collide with a platform
   def platform_collide(self):
@@ -98,9 +97,9 @@ class player(pygame.sprite.Sprite):
 
   def is_standing(self):
    self.future_rect.y += self.dy + self.FALLACCEL
-   self.collision_array, block = self.platform_collide()
+   collision_array, block = self.platform_collide()
    self.future_rect.y = self.rect.y
-   if self.collision_array[2] == 1:
+   if collision_array[2] == 1:
      self.rect.bottom = block.rect.top -1
      self.dy = 0
      return True
@@ -128,8 +127,8 @@ class player(pygame.sprite.Sprite):
       else:
         self.dx += self.XACCEL
       self.future_rect.x += self.dx
-      self.collision_array, block_hit = self.platform_collide()
-      if self.collision_array[0] == 1:
+      collision_array, block_hit = self.platform_collide()
+      if collision_array[0] == 1:
         self.rect.right = block_hit.rect.left - 1
         self.dx = 0
       else:
@@ -143,8 +142,8 @@ class player(pygame.sprite.Sprite):
       else:
         self.dx -= self.XACCEL
       self.future_rect.x += self.dx
-      self.collision_array, block_hit = self.platform_collide()
-      if self.collision_array[1] == 1:
+      collision_array, block_hit = self.platform_collide()
+      if collision_array[1] == 1:
         self.rect.left = block_hit.rect.right + 1
         self.dx = 0
       else: 
@@ -154,13 +153,16 @@ class player(pygame.sprite.Sprite):
     # decel if we wanted too.
     if not (keyPressed(K_a) or keyPressed(K_d)):  
       self.dx = 0
+    
+    if keyPressed(K_a) and keyPressed(K_d):
+      self.dx = 0
 
     #Jump
     if keyPressed(K_w) and self.STANDING:
       self.dy += self.JUMPACCEL
       self.future_rect.y += self.dy
-      self.collision_array, block_hit = self.platform_collide()
-      if self.collision_array[3] == 1:
+      collision_array, block_hit = self.platform_collide()
+      if collision_array[3] == 1:
         self.rect.top = block_hit.rect.bottom +1
         self.dy = 0
       else:
@@ -171,8 +173,8 @@ class player(pygame.sprite.Sprite):
       self.dy += self.FALLACCEL
       if self.dy < 0:
         self.future_rect.y += self.dy
-        self.collision_array, block_hit = self.platform_collide()
-        if self.collision_array[3] == 1:
+        collision_array, block_hit = self.platform_collide()
+        if collision_array[3] == 1:
           self.rect.top = block_hit.rect.bottom + 1
           self.dy = 0
       self.rect.y += self.dy
