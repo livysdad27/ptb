@@ -65,7 +65,7 @@ class player(pygame.sprite.Sprite):
   for frame in imgarr:
     revarr.append(pygame.transform.flip(frame, True, False))
   
-  JUMPACCEL = -23
+  JUMPACCEL = -16
   FALLACCEL = 2 
   XACCEL = 2 
   dy = 0
