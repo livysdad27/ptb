@@ -7,6 +7,7 @@
 ##########################
 import pygame, sys, time
 from pygame.locals import *
+from lib import platform
 
 FPS = 30
 FPSCLOCK = pygame.time.Clock()
@@ -29,23 +30,6 @@ imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
 
 brownblock = pygame.image.load("assets/brownblock.png") 
 #################
-
-#################################################
-#Build a block class to create something for bob and company
-#to stand on.
-##################################################
-class platform(pygame.sprite.Sprite):
-  def __init__(self, img, x, y):
-    pygame.sprite.Sprite.__init__(self)
-    self.image = img 
-    self.rect = self.image.get_rect()
-    self.rect.x = x
-    self.rect.y = y
-    self.top_rect = pygame.Rect(self.rect.left, self.rect.top, self.rect.width, 1)
-    self.bottom_rect = pygame.Rect(self.rect.left, self.rect.bottom, self.rect.width, 1)
-    self.left_rect = pygame.Rect(self.rect.left, self.rect.top, 1, self.rect.height)
-    self.right_rect = pygame.Rect(self.rect.right, self.rect.top, 1, self.rect.height)
-##################################################
 
 ##################################################
 #Build a player class to control ptb as we play.
@@ -70,7 +54,7 @@ class player(pygame.sprite.Sprite):
   XACCEL = 2 
   dy = 0
   dx = 0 
-  MAXSPEED = 3 
+  MAXSPEED = 12 
   STANDING = False 
 
   t1 = time.time()
@@ -202,13 +186,14 @@ allsprites.add(ptb)
 level = pygame.sprite.Group()
 levelmap = [] 
 for i in range(0, 800, 32):
-  levelmap.append(platform(brownblock, i, 300))
+  levelmap.append(platform.Platform(brownblock, i, 320))
   if i > 400:  
-    levelmap.append(platform(brownblock, i, 200))
+    levelmap.append(platform.Platform(brownblock, i, 248))
+  if i > 600:
+    levelmap.append(platform.Platform(brownblock, i, 216))
 
-for i in range(0, 400, 32):
-  levelmap.append(platform(brownblock, 600, i))
-  levelmap.append(platform(brownblock, 300, i))
+for i in range(170, 400, 32):
+  levelmap.append(platform.Platform(brownblock, 700, i))
 
 levelrect = [p.rect for p in levelmap]
 
