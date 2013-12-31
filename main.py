@@ -7,12 +7,24 @@
 ##########################
 import pygame, sys, time
 from pygame.locals import *
-from lib import platform
+from lib import level
+
+if len(sys.argv) > 1:
+  level_file = "./levels/" + sys.argv[1]
+else:
+  level_file = "./levels/test.lvl"
+
+if len(sys.argv) > 2:
+  block_dir = sys.argv[2]
+else:
+  block_dir = "assets/blocks"
+
+firstlevel = level.Level(level_file)
 
 FPS = 30
 FPSCLOCK = pygame.time.Clock()
-DISPWIDTH = 800
-DISPHEIGHT = 400
+DISPWIDTH = firstlevel.right_edge
+DISPHEIGHT = firstlevel.bottom_edge 
 WHITE = (200, 200, 200)
 BLACK = (0, 0, 0)
 
@@ -27,9 +39,6 @@ pygame.display.set_caption("PTB Prototype")
 imgarr = []
 imgarr.append(pygame.image.load("assets/bobstand.png").convert_alpha())
 imgarr.append(pygame.image.load("assets/bobwalk.png").convert_alpha())
-
-brownblock = pygame.image.load("assets/brownblock.png") 
-#################
 
 ##################################################
 #Build a player class to control ptb as we play.
@@ -49,7 +58,7 @@ class player(pygame.sprite.Sprite):
   for frame in imgarr:
     revarr.append(pygame.transform.flip(frame, True, False))
   
-  JUMPACCEL = -16
+  JUMPACCEL = -20
   FALLACCEL = 2 
   XACCEL = 2 
   dy = 0
@@ -182,22 +191,11 @@ allsprites = pygame.sprite.Group()
 ptb = player(imgarr, 400, 100) 
 allsprites.add(ptb)
 
-#Instantiate some blocks durnit!
-level = pygame.sprite.Group()
-levelmap = [] 
-for i in range(0, 800, 32):
-  levelmap.append(platform.Platform(brownblock, i, 320))
-  if i > 400:  
-    levelmap.append(platform.Platform(brownblock, i, 248))
-  if i > 600:
-    levelmap.append(platform.Platform(brownblock, i, 216))
-
-for i in range(170, 400, 32):
-  levelmap.append(platform.Platform(brownblock, 700, i))
-
-levelrect = [p.rect for p in levelmap]
-
-level.add(levelmap)  
+#Load up some blocks!!!!
+firstlevel.load_blocks(block_dir)
+level = firstlevel.level_group 
+levelmap = firstlevel.levelmap 
+levelrect = firstlevel.levelrect 
 allsprites.add(levelmap)
 
 while True:
