@@ -1,10 +1,15 @@
 #!/usr/bin/python
+import os
 import pygame
 import platform
 class Level(object):
   block_height = 32
   block_width = 32
-  brownblock = pygame.image.load("../assets/brownblock.png")
+  block_dict = {}
+  block_dir = "../assets/blocks/"
+  for file in os.listdir(block_dir):
+    surface = pygame.image.load(block_dir + file)
+    block_dict.update({file: surface}) 
   def __init__(self, file):
     self.text = [row.strip('\n') for row in\
                      open(file, 'r').readlines()]
@@ -20,8 +25,8 @@ class Level(object):
     for row in self.text:
       x_coord = 0
       for letter in row:
-        if letter == '1':
-          self.levelmap.append(platform.Platform(self.brownblock, x_coord, y_coord))
+        if letter != ' ':
+          self.levelmap.append(platform.Platform(self.block_dict[letter], x_coord, y_coord))
         x_coord += self.block_width 
       y_coord += self.block_height 
     self.levelrect = [p.rect for p in self.levelmap]
