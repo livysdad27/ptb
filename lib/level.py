@@ -8,7 +8,10 @@ class Level(object):
   def __init__(self, file):
     self.text = [row.strip('\n') for row in\
                      open(file, 'r').readlines()]
-    self.tile_width = len(self.text[0])
+    self.tile_width = 0
+    for line in self.text:
+      if len(line) > self.tile_width:
+        self.tile_width = len(line)
     self.tile_height = len(self.text) 
     self.left_edge = 0
     self.rigth_edge = 0
@@ -18,9 +21,9 @@ class Level(object):
     self.levelmap = []
     self.block_dict = {}
 
-  def load_map(self, block_dir):
+  def load_blocks(self, block_dir):
     for file in os.listdir(block_dir):
-      surface = pygame.image.load(block_dir + file).convert_alpha()
+      surface = pygame.image.load(block_dir + "/" + file).convert_alpha()
       self.block_dict.update({file: surface})
     y_coord = 0
     for row in self.text:
