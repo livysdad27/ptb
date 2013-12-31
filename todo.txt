@@ -4,8 +4,13 @@ X.  Scale speed to change based on locomotion type. - Made it an attribute of pl
 4.  Figure out a screen/message dialogue for narration.
 5.  Start to create bad guy sprites and sprite objects.
 x.  Figure out how to do collision detection with blocks
-7.  Figure out tile mapping and level creation code.
-8.  Find/make tiles....
+X.  Figure out tile mapping and level creation code.
+x.  Find/make tiles....
+9.  Figure out how to make non-collision-tiles and animated tiles.
+10.  Fix how crappy my bob movement is.
+11.  Better animation and spritesheeting for sprites.
+12.  Figure out camera code implementation for large levels.
+13.  Rewrite the bob/player class using masks in the lib dir.
 
 Algorithm for physics in PTB.
 1.  Develop the future rect.
@@ -20,4 +25,3 @@ unless I want to scan every block and every surface on the axis every time.
 Options:
 1.  Create a top, right, left and bottom rect for each block?
 2.  Use this as the opportunity to switch to masks???
-
