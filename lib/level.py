@@ -5,11 +5,6 @@ import platform
 class Level(object):
   block_height = 32
   block_width = 32
-  block_dict = {}
-  block_dir = "../assets/blocks/"
-  for file in os.listdir(block_dir):
-    surface = pygame.image.load(block_dir + file)
-    block_dict.update({file: surface}) 
   def __init__(self, file):
     self.text = [row.strip('\n') for row in\
                      open(file, 'r').readlines()]
@@ -21,6 +16,12 @@ class Level(object):
     self.bottom_edge = self.tile_height * self.block_height
     self.level_group = pygame.sprite.Group()
     self.levelmap = []
+    self.block_dict = {}
+
+  def load_map(self, block_dir):
+    for file in os.listdir(block_dir):
+      surface = pygame.image.load(block_dir + file).convert_alpha()
+      self.block_dict.update({file: surface})
     y_coord = 0
     for row in self.text:
       x_coord = 0

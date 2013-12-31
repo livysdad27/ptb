@@ -15,4 +15,3 @@ class Platform(pygame.sprite.Sprite):
                      self.rect.top, 1, self.rect.height)
     self.right_rect = pygame.Rect(self.rect.right, \
                      self.rect.top, 1, self.rect.height)
-
