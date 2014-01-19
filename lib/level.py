@@ -5,21 +5,26 @@ import platform
 class Level(object):
   block_height = 32
   block_width = 32
-  def __init__(self, file):
-    self.text = [row.strip('\n') for row in\
-                     open(file, 'r').readlines()]
+  def __init__(self):
     self.tile_width = 0
-    for line in self.text:
-      if len(line) > self.tile_width:
-        self.tile_width = len(line)
-    self.tile_height = len(self.text) 
+    self.tile_height = 0 
     self.left_edge = 0
     self.rigth_edge = 0
-    self.right_edge = self.tile_width * self.block_width
-    self.bottom_edge = self.tile_height * self.block_height
+    self.right_edge = 0
+    self.bottom_edge = 0
     self.level_group = pygame.sprite.Group()
     self.levelmap = []
     self.block_dict = {}
+
+  def load_file(self, file):
+    self.text = [row.strip('\n') for row in\
+                 open(file, 'r').readLines()]
+    for line in self.text:
+      if len(line) > self.tile_width:
+        self.tile_width = len(line)
+      self.tile_height = len(self.text)
+      self.right_edge = self.tile_width * self.block_width
+      self.bottom_edge = self.tile_height * self.block_height
 
   def load_blocks(self, block_dir):
     for file in os.listdir(block_dir):
