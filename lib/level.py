@@ -15,6 +15,7 @@ class Level(object):
     self.level_group = pygame.sprite.Group()
     self.levelmap = []
     self.block_dict = {}
+    self.text = []
 
   def load_file(self, file):
     self.text = [row.strip('\n') for row in\
