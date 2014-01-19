@@ -18,7 +18,7 @@ class Level(object):
 
   def load_file(self, file):
     self.text = [row.strip('\n') for row in\
-                 open(file, 'r').readLines()]
+                 open(file, 'r').readlines()]
     for line in self.text:
       if len(line) > self.tile_width:
         self.tile_width = len(line)
