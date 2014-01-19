@@ -19,7 +19,8 @@ if len(sys.argv) > 2:
 else:
   block_dir = "assets/blocks"
 
-firstlevel = level.Level(level_file)
+firstlevel = level.Level()
+firstlevel.load_file(level_file)
 
 FPS = 30
 FPSCLOCK = pygame.time.Clock()
