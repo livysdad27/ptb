@@ -5,6 +5,8 @@ from pygame.locals import *
 pygame.init
 from lib import level
 
+level_dir = "./levels/"
+
 if len(sys.argv) > 1:
   level_file = sys.argv[1]
 else:
@@ -17,7 +19,8 @@ else:
   block_dir = "./assets/blocks"
     
 WHITE = (200, 200, 200)
-firstlevel = level.Level("./levels/" + level_file)
+firstlevel = level.Level()
+firstlevel.load_file(level_dir + level_file)
 DISPWIDTH = firstlevel.right_edge
 DISPHEIGHT = firstlevel.bottom_edge
 DISPSURF = pygame.display.set_mode((DISPWIDTH, DISPHEIGHT))
