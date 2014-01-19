@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import pygame
 import sys
+import time
 from pygame.locals import *
 pygame.init
 from lib import level
@@ -12,7 +13,9 @@ FLASH_COLOR = (20, 200, 200)
 EDIT_MODE = False
 BLOCK_WIDTH = 32
 BLOCK_HEIGHT = 32
+FLASH_FREQ = .4
 editlevel = level.Level()
+t1 = time.time()
 
 if len(sys.argv) < 2:
   print "Usage is le.py <file_name> or le.py width height <file_name>"
@@ -41,12 +44,19 @@ DISPSURF = pygame.display.set_mode((DISPWIDTH, DISPHEIGHT))
 pygame.display.set_caption("level viewer")
 editlevel.load_blocks(block_dir)
 
+cursor_rect = pygame.rect.Rect(0, 0, BLOCK_WIDTH, BLOCK_HEIGHT)
+
 while True:
+  t2 = time.time()
   for event in pygame.event.get():
     if event.type == QUIT:
       pygame.quit()
       sys.exit()
   DISPSURF.fill(WHITE)
   editlevel.level_group.draw(DISPSURF)
+  if (t2 - t1) > FLASH_FREQ:
+    DISPSURF.fill(FLASH_COLOR, cursor_rect) 
+    if (t2 - t1) > (2 * FLASH_FREQ):
+      t1 = time.time() 
   pygame.display.update()
   pygame.display.flip()
